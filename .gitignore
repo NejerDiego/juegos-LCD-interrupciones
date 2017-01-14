@@ -1,0 +1,102 @@
+////UNIVERSIDAD TÉCNICA DEL NORTE //////
+// FACULTAD DE INGENIERIA EN CIENCIAS APLICADAS /////
+
+
+//NOMBRE: NEJER HARO DIEGO ////
+//CARRERA: CIERCOM /////
+
+#include <LiquidCrystal.h>
+LiquidCrystal lcd (9, 8, 7, 6, 5, 4);
+int tamano;
+int i = 16;
+int j = 0;
+int inter1 = 0;
+int inter2 = 0;
+String enc1;
+String enc2;
+String dato;
+void setup() {
+  // put your setup code here, to run once:
+  lcd.begin(16, 2);
+  Serial.begin(9600);
+  attachInterrupt(0, INTP, CHANGE);
+  attachInterrupt(1, INTS, CHANGE);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (inter1 == 1) {
+    lcd.setCursor(0, 1);
+    lcd.print("Encendido");
+    delay(2000);
+    Serial.println("Seleccione Juego");
+    delay(4000);
+    if (inter2 == 1) {
+      lcd.setCursor(10, 1);
+      lcd.print("Juego1");
+      Serial.println("Introduzca la palabra");
+      delay(4000);
+      dato = Serial.readString();
+      juegoprimero(dato);
+      Serial.println("");
+    }
+    else {
+      lcd.setCursor(10, 1);
+      lcd.print("Juego2");
+      Serial.println("Introduzca la palabra");
+      delay(4000);
+      dato = Serial.readString();
+     juegosegundo(dato);
+      Serial.println("");
+
+    }
+  }
+  else{
+    lcd.clear();
+  }
+}
+
+void INTP() {
+  inter1 = 1 - inter1;
+}
+void INTS() {
+  inter2 = 1 - inter2;
+}
+void borrarP() {
+
+  for (; i >= 0; i--) {
+    lcd.setCursor(i, 0);
+    lcd.print(' ');
+  }
+  i = 16;
+
+}
+void juegoprimero(String letra) {
+
+  tamano = letra.length();
+  char vector[tamano + 1];
+  letra.toCharArray(vector, tamano + 1);
+  for (; j < tamano; j++) {
+    lcd.setCursor(j, 0);
+    lcd.print(vector[j]);
+    delay(200);
+    borrarP();
+  }
+  j = 0;
+}
+void juegosegundo(String letras) {
+
+  tamano = letras.length();
+  char vector[tamano + 1];
+  letras.toCharArray(vector, tamano + 1);
+
+  for (; j < tamano; j++) {
+    lcd.setCursor(j, 0);
+    lcd.print(vector[j]);
+    delay(200);
+  }
+  for (; j >= 0; j--) {
+    lcd.setCursor(j, 0);
+    lcd.print(' ');
+    delay(200);
+  }
